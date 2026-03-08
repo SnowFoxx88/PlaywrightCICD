@@ -10,5 +10,5 @@ dependencies = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--headed --browser chromium --html=reports/report.html --self-contained-html --slowmo=200"
+addopts = "--browser chromium --html=reports/report.html --self-contained-html --slowmo=200"
 testpaths = ["tests"]
