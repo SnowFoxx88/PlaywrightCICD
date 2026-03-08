@@ -1,4 +1,5 @@
 import pytest
+import os
 from playwright.sync_api import sync_playwright
 
 
@@ -6,7 +7,10 @@ from playwright.sync_api import sync_playwright
 def browser():
     with sync_playwright() as p:
         # Browser starten
-        browser = p.chromium.launch(headless=False)
+        if os.getenv("CI") == "true":
+            return {**p, "headless": True}
+        else:
+            browser = p.chromium.launch(headless=False)
         yield browser
         browser.close()
 
