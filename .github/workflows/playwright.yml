@@ -35,3 +35,4 @@ jobs:
       with:
         name: playwright-traces
         path: test-results/
+        retention-days: 30
