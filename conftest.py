@@ -1,12 +1,12 @@
 import pytest
 from playwright.sync_api import sync_playwright
+from pages.page_manager import PageManager
 
 
 @pytest.fixture(scope="session")
-def browser():
+def browser(pytestconfig):
     with sync_playwright() as p:
-        # Browser starten
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=False)
         yield browser
         browser.close()
 
@@ -17,3 +17,8 @@ def page(browser):
     page = context.new_page()
     yield page
     context.close()
+
+
+@pytest.fixture
+def pm(page):
+    return PageManager(page)
