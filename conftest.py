@@ -7,12 +7,11 @@ from pages.page_manager import PageManager
 @pytest.fixture(scope="session")
 def browser(pytestconfig):
     with sync_playwright() as p:
-        is_ci = os.getenv("CI") == "true"
-
-        if is_ci == "true":
+        is_headed = pytestconfig.getoption("headed")
+        if is_headed:
             browser = p.chromium.launch(headless=False)
         else:
-            browser = p.chromium.launch(headless=False)
+            browser = p.chromium.launch(headless=True)
         yield browser
         browser.close()
 

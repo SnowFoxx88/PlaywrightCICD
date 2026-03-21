@@ -20,4 +20,5 @@ def test_login(pm: PageManager, user_credentials):
     pm.login_page.enter_username(user_credentials["username"])
     pm.login_page.enter_password(user_credentials["password"])
     pm.login_page.click_login()
+    expect(pm.tasksmash_page.header).to_be_visible()
     time.sleep(3)
