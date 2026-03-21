@@ -1,4 +1,5 @@
 import pytest
+import os
 from playwright.sync_api import sync_playwright
 from pages.page_manager import PageManager
 
@@ -6,7 +7,12 @@ from pages.page_manager import PageManager
 @pytest.fixture(scope="session")
 def browser(pytestconfig):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        is_ci = os.getenv("CI") == "true"
+
+        if is_ci == "true":
+            browser = p.chromium.launch(headless=False)
+        else:
+            browser = p.chromium.launch(headless=False)
         yield browser
         browser.close()
 
