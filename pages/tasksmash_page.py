@@ -9,6 +9,3 @@ class TaskSmashPage:
 
     def click_login(self):
         self.add_task_button.click()
-
-
-#
