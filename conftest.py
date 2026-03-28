@@ -1,5 +1,4 @@
 import pytest
-import os
 from playwright.sync_api import sync_playwright
 from pages.page_manager import PageManager
 
@@ -26,4 +25,4 @@ def page(browser):
 
 @pytest.fixture
 def pm(page):
-    return PageManager(page)
+    yield PageManager(page)

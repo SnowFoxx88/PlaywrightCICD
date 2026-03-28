@@ -29,7 +29,7 @@ jobs:
     - name: Run your tests
       env:
         URL: ${{ secrets.PLAYWRIGHT_TEST_URL }}
-      run: uv run pytest --tracing=retain-on-failure
+      run: uv run pytest -m api; pytest -m ui --tracing=retain-on-failure
 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
