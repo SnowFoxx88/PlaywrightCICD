@@ -15,7 +15,7 @@ with open("data/credentials.json") as f:
 
 @pytest.mark.ui
 @pytest.mark.parametrize("user_credentials", credentials)
-def test_login(pm: PageManager, user_credentials):
+def test_login_logout(pm: PageManager, user_credentials):
     pm.login_page.open_url(url)
     pm.login_page.enter_username(user_credentials["username"])
     pm.login_page.enter_password(user_credentials["password"])
