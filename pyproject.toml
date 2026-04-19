@@ -9,3 +9,9 @@ dependencies = [
     "pytest-playwright>=0.7.2",
     "python-dotenv>=1.2.2",
 ]
+
+[tool.pytest.ini_options]
+markers = [
+    "api: API tests",
+    "ui: UI tests"
+]
