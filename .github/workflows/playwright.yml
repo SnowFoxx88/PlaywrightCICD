@@ -1,18 +1,11 @@
 name: Playwright Tests
 on:
   push:
-    branches: [main]
-  pull_request: # Best practice: catch bugs BEFORE they merge
-    branches: [main]
-
-concurrency: # Cancels mid-run jobs if you push new code to the same branch
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
+    branches: [ main]
 jobs:
   test:
     timeout-minutes: 60
-    runs-runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
 
@@ -25,42 +18,22 @@ jobs:
       uses: astral-sh/setup-uv@v5
       with:
         enable-cache: true
+        version: "latest"
 
     - name: Install dependencies
       run: uv sync --all-groups
 
-    - name: Get Playwright version
-      id: playwright-version
-      run: echo "version=$(uv run pip show playwright | grep Version | sed 's/Version: //')" >> $GITHUB_OUTPUT
-
-    - name: Playwright Browser Cache
-      id: cache-playwright
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/ms-playwright
-        key: playwright-browsers-${{ steps.playwright-version.outputs.version }}
-
-    # CRITICAL: This step was missing. It installs browsers ONLY if the cache misses.
-    - name: Install Playwright Browsers
-      if: steps.cache-playwright.outputs.cache-hit != 'true'
+    - name: Ensure browsers are installed
       run: uv run playwright install --with-deps
-
-    # Best Practice: Also install system dependencies (even if browsers are cached) 
-    # as these are small and ensure the Ubuntu runner is ready.
-    - name: Install Playwright System Deps
-      run: uv run playwright install-deps
 
     - name: Run your tests
       env:
         URL: ${{ secrets.PLAYWRIGHT_TEST_URL }}
-      # Use '&&' instead of ';' so if API tests fail, the job stops immediately 
-      # and doesn't waste time/money running UI tests on a broken build.
       run: uv run pytest -m api && uv run pytest -m ui --tracing=retain-on-failure
 
-    - name: Upload Artifacts
-      if: failure() # Only upload traces when things go wrong to keep your storage clean
-      uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
       with:
         name: playwright-traces
         path: test-results/
-        retention-days: 7 # 30 days is usually overkill for a fast-moving dev branch
+        retention-days: 7
