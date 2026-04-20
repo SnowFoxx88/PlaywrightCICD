@@ -1,8 +1,14 @@
 ##################### Powershell commands#######################
 Debugmode:
-$env:PWDEBUG=1; pytest -s (neue powershell session aufmachen für debug exit)
-Run Tests:
-pytest -m api; pytest -m ui
+$env:PWDEBUG=1; pytest -s .\tests\test_ui.py::test_add_task (neue powershell session aufmachen für debug exit)
+
+##################### Run Tests commands#######################
+Run all:
+uv run pytest -m api; uv run pytest -m ui -n 4 --headed
+-n <any number or auto> = starting workers for parallel execution
+
+Run certain tests:
+uv run pytest .\tests\test_ui.py::test_add_task
 
 
 ##################### conftext.py#######################
